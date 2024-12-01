@@ -7,12 +7,12 @@ Attendance Manager
 
 Ensure that the following software is installed on your system before proceeding:
 
+- Git
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 ---
 
-## Setup Steps
 
 Follow these steps to set up and run the project using Docker.
 
