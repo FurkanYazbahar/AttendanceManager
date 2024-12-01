@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .actions {
+            margin-bottom: 20px;
+        }
+        .actions button {
+            background-color: #6C757D;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .actions button:hover {
+            background-color: #6C757D;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="employee-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; border-radius:8px; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.3); width:400px; z-index:1000;">
+        <h2>Employee Details</h2>
+        <div id="employee-details">
+            <!-- Çalışan bilgileri buraya yüklenecek -->
+        </div>
+        <button onclick="closeModal()" style="background-color: #007BFF; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+    </div>
+    <div id="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;" onclick="closeModal()"></div>
+    
+
+
+    <div class="container">
+        <h1>Employee List</h1>
+        <div class="actions">
+            <button onclick="goToDashboard()">Back to Dashboard</button>
+        </div>
+        <table id="employee-table" class="display">
+            <thead>
+                <tr>
+                    <th style="display:none;">User ID</th> <!-- User ID sütunu -->
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        // Dashboard yönlendirme fonksiyonu
+        function goToDashboard() {
+            window.location.href = '/admin/dashboard'; // Dashboard URL'sini buraya ekleyin
+        }
+
+        // Modal açma fonksiyonu
+        function openModal() {
+            document.getElementById('employee-modal').style.display = 'block';
+            document.getElementById('modal-overlay').style.display = 'block';
+        }
+
+        // Modal kapama fonksiyonu
+        function closeModal() {
+            document.getElementById('employee-modal').style.display = 'none';
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+        // Çalışan detaylarını API'den al ve modal içinde göster
+        function fetchEmployeeDetails(userId, token) {
+            $.ajax({
+                url: `/api/employees/search/${userId}`, // Çalışan detay API'si
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                success: function(employee) {
+                    const detailsDiv = document.getElementById('employee-details');
+                    detailsDiv.innerHTML = `
+                        <p><strong>Username:</strong> ${employee.user.username}</p>
+                        <p><strong>Full Name:</strong> ${employee.user.first_name || 'N/A'} ${employee.user.last_name || 'N/A'}</p>
+                        <p><strong>Email:</strong> ${employee.user.email || 'N/A'}</p>
+                        <p><strong>Active:</strong> ${employee.user.is_active ? 'Yes' : 'No'}</p>
+                        <p><strong>Department:</strong> ${employee.department.name || 'Not Assigned'}</p>
+                        <p><strong>Position:</strong> ${employee.position.name || 'Not Assigned'}</p>
+                        <p><strong>Hire Date:</strong> ${employee.hire_date || 'N/A'}</p>
+                        <p><strong>Termination Date:</strong> ${employee.termination_date || 'Still Working'}</p>
+                        <p><strong>Annual Leave Days:</strong> ${employee.annual_leave_days}</p>
+                        <p><strong>Salary:</strong> $${employee.salary || 'Not Disclosed'}</p>
+                        <p><strong>Work Schedule:</strong> ${employee.work_schedule || 'Default Schedule'}</p>
+                        <p><strong>Phone:</strong> ${employee.phone || 'N/A'}</p>
+                    `;
+                    openModal();
+                },
+                error: function(error) {
+                    console.error('Error fetching employee details:', error);
+                    alert('Error fetching employee details.');
+                }
+            });
+        }
+
+        // DataTable'ı server-side modunda başlat
+        $(document).ready(function () {
+            const token = localStorage.getItem('access_token'); // Bearer token'i localStorage'dan al
+            if (!token) {
+                alert('Missing authorization token. Please log in again.');
+                return;
+            }
+
+            $('#employee-table').DataTable({
+                processing: true, // İşlem göstergesi
+                serverSide: true, // Server-side işlem
+                ajax: {
+                    url: '/api/users/', // Backend API'nin URL'si
+                    type: 'GET',
+                    data: function (d) {
+                        return {
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            search: d.search.value                            
+                        };
+                    },
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    dataSrc: 'data', // API yanıtında verilerin bulunduğu alan
+                    error: function (xhr) {
+                        const response = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
+                        if (xhr.status === 403) {
+                            alert('Your session has expired. Redirecting to login page...');
+                            window.location.href = '/login';
+                        } else {
+                            console.error('An error occurred while loading the table data:', response);
+                            alert('An unexpected error occurred. Please try again later.');
+                            window.location.href = '/login';
+                        }
+                    }
+                },
+                columns: [
+                    { data: 'id', visible: false  },
+                    { data: 'username' },
+                    { data: 'first_name' },
+                    { data: 'last_name' },
+                    { data: 'email' },
+                    { 
+                        data: 'is_active',
+                        render: function(data) {
+                            return data ? 'Yes' : 'No';
+                        }
+                    }
+                ],
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "No entries available",
+                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    zeroRecords: "No matching records found",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                }
+            });
+            // Tablodaki satıra tıklama işlemi
+            $('#employee-table tbody').on('click', 'tr', function () {
+                const table = $('#employee-table').DataTable();
+                const data = table.row(this).data();
+                fetchEmployeeDetails(data.id, token); // Çalışan ID'sini kullanarak detayları al
+            });
+        });
+    </script>
+</body>
+</html>

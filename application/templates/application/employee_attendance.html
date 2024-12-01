@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Attendance</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        table.dataTable {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        table.dataTable thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin/dashboard" class="btn btn-secondary back-button">Back to Dashboard</a>
+        <h1>Employee Attendance</h1>
+        <table id="attendanceTable" class="table table-striped table-bordered display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Employee</th>
+                    <th>Date</th>
+                    <th>Entry Time</th>
+                    <th>End Time</th>
+                    <th>Delayed Time</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const token = localStorage.getItem('access_token');
+
+            //function convertUTCToLocal(utcTime) {
+            //    if (!utcTime) return 'N/A';
+            //    const parsedDate = Date.parse(utcTime);
+            //    if (isNaN(parsedDate)) return 'Invalid Date';
+            //    const localTime = new Date(parsedDate);
+            //    return localTime.toLocaleString();
+            //}
+
+            $('#attendanceTable').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: {
+                    url: '/api/attendances/',
+                    type: 'GET',
+                    data: function (d) {
+                        return {
+                            draw: d.draw,
+                            start: d.start,
+                            length: d.length,
+                            search: d.search.value,
+                            order: d.order.map(o => ({
+                                column: d.columns[o.column].data,
+                                dir: o.dir
+                            }))
+                        };
+                    },
+                    beforeSend: function (xhr) {
+                        if (token) {
+                            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+                        } else {
+                            console.error('Token not found!');
+                        }
+                    },
+                    dataSrc: 'data',
+                    error: function (xhr) {
+                        const response = xhr.responseJSON || JSON.parse(xhr.responseText || '{}');
+                        if (xhr.status === 403) {
+                            alert('Your session has expired. Redirecting to login page...');
+                            window.location.href = '/login';
+                        } else {
+                            console.error('An error occurred while loading the table data:', response);
+                            alert('An unexpected error occurred. Please try again later.');
+                        }
+                    }
+                },
+                columns: [
+                    { data: 'id' },
+                    { data: 'employee_name' },
+                    { data: 'date' }, // Tarih için dönüştürme gerekmez
+                    { data: 'entry_time' },
+                    { data: 'end_time' },
+                    { data: 'delayed_time' }
+                ],
+                language: {
+                    processing: "Loading...",
+                    paginate: {
+                        first: '<<',
+                        last: '>>',
+                        next: '>',
+                        previous: '<'
+                    }
+                },
+                pagingType: 'full_numbers'
+            });
+        });
+    </script>
+</body>
+</html>

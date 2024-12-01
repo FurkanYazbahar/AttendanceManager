@@ -1,0 +1,78 @@
+/* Genel Stil Ayarları */
+body {
+    font-family: 'Roboto', sans-serif; /* Modern bir font */
+    background-color: #f8f9fa; /* Arka plan rengi */
+    color: #0e0f0f; /* Metin rengi */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #007BFF; /* Navbar rengi */
+}
+
+.navbar-brand, .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-item .nav-link {
+    margin-right: 10px;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #FFD700; /* Hover rengi */
+}
+
+/* Aktif sayfa için */
+.navbar-nav .nav-item .nav-link.active {
+    font-weight: bold;
+    border-bottom: 2px solid #FFD700;
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    color: #212529;
+    margin: 0;
+}
+
+/* Ana İçerik */
+.container {
+    background: #ffffff; /* Beyaz arka plan */
+    color: #212529; /* Siyah tonlarında metin */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+/* Linkler */
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+footer a {
+    color: #212529;
+    font-size: 20px;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+footer a:hover {
+    color: #FFD700;
+}

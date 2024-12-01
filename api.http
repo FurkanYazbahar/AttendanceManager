@@ -1,0 +1,61 @@
+POST http://localhost:8000/api/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+###
+POST http://localhost:8000/api/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "user",
+    "password": "user"
+}
+
+
+###
+GET http://localhost:8000/api/user/ HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDU1OTM3LCJpYXQiOjE3MzMwNTQxMzcsImp0aSI6IjU4MTI4MjBmYjA2OTQyNTM5OGJjYzE5YjUzZmRiNTVjIiwidXNlcl9pZCI6Mn0.B7TlPjDmwEwKCCBfzL9upg7FaakGKTJUcXndqpCmGq0###
+
+###
+GET http://localhost:8000/api/attendances/ HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyOTMxNDU1LCJpYXQiOjE3MzI5Mjk2NTUsImp0aSI6IjdjODZiNjA5NTc0MjQzOTY5MGJjMjA1YzdjOTIwMDNjIiwidXNlcl9pZCI6MX0.Wz7yudkuayAfdzHNnVTtservV9ciy-gdZhN2rt1w-lk
+
+###
+GET http://localhost:8000/api/users/ HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyOTg3MjU1LCJpYXQiOjE3MzI5ODU0NTUsImp0aSI6IjA2Yjc5NTVlZDU5NTQ3ZTg5MDQ4MWQ0NDExNzkzNjVlIiwidXNlcl9pZCI6MX0.GtIzWH3w7XjyzIuJLxr-_L1TAXjqlQ6_txgEHXBWio4
+
+
+###
+GET http://localhost:8000/api/employees/search/2 HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDU2NTgwLCJpYXQiOjE3MzMwNTQ3ODAsImp0aSI6IjFmNzFmZmQwZTg3ODQ3YzdhMDllN2E3ZjRhNjMyNjQxIiwidXNlcl9pZCI6Mn0.dUwTpH1MEA1H9yvF80Z112y7ql8o8EqVbbqtBqKokbw
+
+###
+GET http://localhost:8000/api/employees/ HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDUwODA3LCJpYXQiOjE3MzMwNDkwMDcsImp0aSI6IjY1MzhiZDg3MzI1NzRlMDY5NDhmZmZlYzU1YmU4ZGY3IiwidXNlcl9pZCI6MX0.ufQj9xxHlKzew1BmJ_Y2kDSaeQHmAh751r36Fnv9LFs
+
+###
+GET http://localhost:8000/api/profile/leave-requests/ HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDUyNTU2LCJpYXQiOjE3MzMwNTA3NTYsImp0aSI6IjM5ZWUyNGVhNWNlNDQyOTI4NWQ1NzkzMTQxZDRjN2EzIiwidXNlcl9pZCI6Mn0.cB4P1yxlI_b1CRBg7EyB3pPZT5J30joAy1_KQz6xzdw
+###
+POST http://localhost:8000/api/profile/leave-requests/ HTTP/1.1
+Content-Type:  application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyOTk1NDUzLCJpYXQiOjE3MzI5OTM2NTMsImp0aSI6IjhlMTNkN2Y1NjRmNjQ3NDk5MDUzZmUzODc5NjkzYjNlIiwidXNlcl9pZCI6Mn0.SNdme8hlI2xCVGFJGR3o6YeNsm7FK_wxAYLnfWYds3s
+
+{
+    "start_date": "2024-12-01", 
+    "end_date": "2024-12-05", 
+    "reason": "Vacation"
+}
+
+
+/api/attendances/
