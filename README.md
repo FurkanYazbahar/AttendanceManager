@@ -1,10 +1,6 @@
 # AttendanceManager
 Attendance Manager
 
-# Attendance Manager - Docker Setup Guide
-
-This document provides a step-by-step guide to set up and run the Attendance Manager project using Docker.
-
 ---
 
 ## Requirements
